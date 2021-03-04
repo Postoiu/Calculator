@@ -1,6 +1,31 @@
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
 .calculator {
     position: absolute;
     border: 1px solid black;
-    
+    border-radius: 5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    display: grid;
 
+}
+
+.calculator-screen {
+    width: 100%;
+    text-align: right;
+}
+
+button {
+    width: 100px;
 }
