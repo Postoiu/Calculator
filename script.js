@@ -1,67 +1,56 @@
-const calculator = {
-    display: document.querySelector('.calculator-screen'),
-    keys: document.querySelectorAll('button'),
-}
+const display = document.querySelector('.calculator-screen');
+const keys = document.querySelectorAll('button');
 
-let input1, operator, input2, result;
-let count = 0;
+let input1, operator, input2;
+let arr1 = [];
+let arr2 = [];
 
-calculator.keys.forEach(key => {
+keys.forEach(key => {
     key.addEventListener('click', () => {
-        
+        if(!key.classList.contains('operator') && !key.classList.contains('equal-sign')) {
 
-        if(key.classList.contains('key')) {
-            if(calculator.display.value === '0') {
-                calculator.display.value = key.value;
+            if(operator === undefined) {
+                arr1.push(key.value);
+                display.value = arr1.join('');
+                input1 = display.value;
+
             } else {
-                calculator.display.value += key.value;
+                arr2.push(key.value);
+                display.value = arr2.join('');
+                input2 = display.value;
             }
         }
+
         if(key.classList.contains('operator')) {
-            count += 1;
-            if(count > 1) {
-                input2 = calculator.display.value.slice(calculator.display.value.indexOf(operator) + 1);
-                result = operate(input1, input2, operator);
-
-                if(result.toString() === 'Infinity') {
-                    calculator.display.value = 'Can not divide by 0';
-                } else if(result.toString().indexOf('.') === -1) {
-                    calculator.display.value = result.toString();
-                } else {
-                    calculator.display.value = result.toFixed(2).toString();
-                }
-            }
-
-            input1 = calculator.display.value;
-            calculator.display.value += key.value;
             operator = key.value;
         }
+
         if(key.classList.contains('equal-sign')) {
-            input2 = calculator.display.value.slice(calculator.display.value.indexOf(operator) + 1);
-            result = operate(input1, input2, operator);
-
-            if(result.toString() === 'Infinity') {
-                calculator.display.value = 'Can not divide by 0';
-            } else if(result.toString().indexOf('.') === -1) {
-                calculator.display.value = result.toString();
+            let result = operate(input1, input2, operator);
+            if(result === Infinity) {
+                display.value = 'Can not divide by 0'
             } else {
-                calculator.display.value = result.toFixed(2).toString();
+                if(result.toString().indexOf('.') === -1) {
+                    display.value = result;
+                } else {
+                    display.value = result.toFixed(2);
+                }
             }
-
-            count = 0;
-        }
-        if(key.classList.contains('all-clear')) {
-            calculator.display.value = '0';
-            count = 0;
-            document.getElementsByClassName('decimal')[0].removeAttribute('disabled');
         }
 
         if(key.classList.contains('decimal')) {
-            calculator.display.value += key.value;
             key.setAttribute('disabled', 'true');
         }
-    });
-});
+
+        if(key.classList.contains('all-clear')) {
+            arr1.splice(0);
+            arr2.splice(0);
+            operator = undefined;
+            display.value = '0';
+            document.getElementsByClassName('decimal')[0].removeAttribute('disabled');
+        }
+    })
+})
 
 
 function operate(a, b, operator) {

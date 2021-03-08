@@ -18,6 +18,7 @@ html {
     transform: translate(-50%, -50%);
     width: 400px;
     display: grid;
+    
 
 }
 
@@ -26,6 +27,9 @@ html {
     text-align: right;
 }
 
-button {
-    width: 100px;
+.calculator-keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
 }
+
