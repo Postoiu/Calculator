@@ -7,7 +7,9 @@ let arr2 = [];
 
 keys.forEach(key => {
     key.addEventListener('click', () => {
-        if(!key.classList.contains('operator') && !key.classList.contains('equal-sign')) {
+        if(!key.classList.contains('operator') && 
+        !key.classList.contains('equal-sign') &&
+        !key.classList.contains('backspace')) {
 
             if(operator === undefined) {
                 arr1.push(key.value);
@@ -42,6 +44,16 @@ keys.forEach(key => {
             key.setAttribute('disabled', 'true');
         }
 
+        if(key.classList.contains('backspace')) {
+            if(operator === undefined) {
+                arr1.pop();
+                display.value = arr1.join('');
+            } else {
+                arr2.pop();
+                display.value = arr2.join('');
+            }
+        }
+
         if(key.classList.contains('all-clear')) {
             arr1.splice(0);
             arr2.splice(0);
@@ -49,9 +61,72 @@ keys.forEach(key => {
             display.value = '0';
             document.getElementsByClassName('decimal')[0].removeAttribute('disabled');
         }
-    })
+    });
+});
+
+window.addEventListener('keydown', (e) => {
+    const key = document.querySelector(`button[data-key="${e.keyCode}"]`);
+    key.classList.add('keydown');
+    if(!key.classList.contains('operator') && 
+        !key.classList.contains('equal-sign') &&
+        !key.classList.contains('backspace')) {
+
+            if(operator === undefined) {
+                arr1.push(key.value);
+                display.value = arr1.join('');
+                input1 = display.value;
+
+            } else {
+                arr2.push(key.value);
+                display.value = arr2.join('');
+                input2 = display.value;
+            }
+        }
+
+        if(key.classList.contains('operator')) {
+            operator = key.value;
+        }
+
+        if(key.classList.contains('equal-sign')) {
+            let result = operate(input1, input2, operator);
+            if(result === Infinity) {
+                display.value = 'Can not divide by 0'
+            } else {
+                if(result.toString().indexOf('.') === -1) {
+                    display.value = result;
+                } else {
+                    display.value = result.toFixed(2);
+                }
+            }
+        }
+
+        if(key.classList.contains('decimal')) {
+            key.setAttribute('disabled', 'true');
+        }
+
+        if(key.classList.contains('backspace')) {
+            if(operator === undefined) {
+                arr1.pop();
+                display.value = arr1.join('');
+            } else {
+                arr2.pop();
+                display.value = arr2.join('');
+            }
+        }
+
+        if(key.classList.contains('all-clear')) {
+            arr1.splice(0);
+            arr2.splice(0);
+            operator = undefined;
+            display.value = '0';
+            document.getElementsByClassName('decimal')[0].removeAttribute('disabled');
+        }
 })
 
+window.addEventListener('keyup', (e) => {
+    const key = document.querySelector(`button[data-key="${e.keyCode}"]`);
+    key.classList.remove('keydown');
+})
 
 function operate(a, b, operator) {
     return operator === '+' ? add(a,b):
